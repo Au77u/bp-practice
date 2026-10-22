@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>b · p 送气音小练习｜发展汉语 初级综合 I</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --b:#2563eb; --p:#f97316;
+  --ink:#1f2937; --soft:#6b7280; --line:#e5e7eb;
+  --ok:#16a34a; --bad:#dc2626;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+  background:linear-gradient(180deg,#eef2ff,#f6f8fb 240px);
+  color:var(--ink);min-height:100vh;
+}
+header{padding:24px 18px 8px;text-align:center;}
+header h1{margin:0 0 6px;font-size:23px;}
+header p{margin:0;font-size:13px;color:var(--soft);}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 60px;}
+
+.tipbar{
+  margin:16px 0 18px;padding:11px 16px;border-radius:12px;
+  background:#fff;border:1px solid #dbeafe;font-size:14px;text-align:center;line-height:1.7;
+}
+.tipbar b.b{color:var(--b);}
+.tipbar b.p{color:var(--p);}
+
+.soundcard{
+  margin:0 0 18px;padding:14px 18px;border-radius:12px;
+  background:#fffbeb;border:1px solid #fcd34d;font-size:13.5px;line-height:1.7;
+}
+.soundcard ol{margin:0 0 12px;padding-left:20px;}
+.srcbadge{
+  display:inline-block;margin-left:10px;font-size:13px;color:var(--soft);
+  background:#fff;border:1px solid var(--line);padding:5px 12px;border-radius:999px;
+}
+.srcbadge b{color:var(--ink);}
+
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;}
+.tab{border:1px solid var(--line);background:#fff;color:var(--soft);
+  padding:9px 20px;border-radius:999px;cursor:pointer;font-size:14px;transition:.18s;}
+.tab:hover{border-color:#a5b4fc;color:var(--ink);}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+  box-shadow:0 6px 20px rgba(31,41,55,.05);margin-bottom:16px;}
+.card h2{margin:0 0 4px;font-size:17px;}
+.card .hint{margin:0 0 16px;font-size:13px;color:var(--soft);line-height:1.7;}
+
+.prow{display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;color:var(--soft);margin-bottom:12px;}
+.chip{background:#eef2ff;color:var(--b);padding:4px 12px;border-radius:999px;font-weight:600;}
+
+button{font-family:inherit;font-size:15px;cursor:pointer;border-radius:12px;
+  border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 18px;transition:.15s;}
+button:hover:not(:disabled){border-color:#a5b4fc;}
+button:disabled{opacity:.45;cursor:not-allowed;}
+.primary{background:var(--ink);color:#fff;border-color:var(--ink);}
+.primary:hover:not(:disabled){background:#111827;}
+
+.play{display:flex;flex-direction:column;align-items:center;gap:10px;margin:6px 0 20px;}
+.play-btn{width:92px;height:92px;border-radius:50%;border:none;color:#fff;font-size:32px;
+  background:linear-gradient(145deg,#4f46e5,#2563eb);box-shadow:0 8px 22px rgba(37,99,235,.3);}
+.play-btn:hover:not(:disabled){transform:translateY(-2px);}
+.play-sub{font-size:12px;color:var(--soft);min-height:18px;text-align:center;}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.choice{border:2px solid var(--line);border-radius:14px;padding:18px 10px;text-align:center;background:#fff;}
+.choice:hover:not(:disabled){border-color:#a5b4fc;transform:translateY(-2px);}
+.choice .tag{font-size:12px;color:var(--soft);letter-spacing:1px;}
+.choice .py{font-size:30px;font-weight:700;margin:5px 0;letter-spacing:1px;}
+.choice .hz{font-size:13px;color:var(--soft);}
+.choice.is-b .py{color:var(--b);}
+.choice.is-p .py{color:var(--p);}
+.choice.correct{border-color:var(--ok);background:#f0fdf4;}
+.choice.wrong{border-color:var(--bad);background:#fef2f2;}
+
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;font-size:14px;line-height:1.75;
+  border:1px solid var(--line);background:#f9fafb;display:none;}
+.fb.show{display:block;}
+.fb.ok{border-color:#bbf7d0;background:#f0fdf4;color:#166534;}
+.fb.bad{border-color:#fecaca;background:#fef2f2;color:#991b1b;}
+.fb b{font-size:15px;}
+.fb .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.fb .btns button{padding:7px 13px;font-size:13px;}
+
+.actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+
+/* 判断题 */
+.judge-q{text-align:center;margin:8px 0 6px;}
+.judge-py{font-size:46px;font-weight:800;letter-spacing:2px;}
+.judge-hz{font-size:15px;color:var(--soft);margin-top:2px;}
+.judge-ask{margin:14px 0 12px;font-size:16px;font-weight:600;}
+.judge-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.jbtn{border:2px solid var(--line);border-radius:14px;padding:18px 10px;background:#fff;text-align:center;}
+.jbtn:hover:not(:disabled){border-color:#a5b4fc;transform:translateY(-2px);}
+.jbtn .ico{font-size:24px;}
+.jbtn .txt{font-size:17px;font-weight:700;margin-top:4px;}
+.jbtn .sub{font-size:12px;color:var(--soft);}
+.jbtn.yes .txt{color:var(--p);}
+.jbtn.no .txt{color:var(--b);}
+.jbtn.correct{border-color:var(--ok);background:#f0fdf4;}
+.jbtn.wrong{border-color:var(--bad);background:#fef2f2;}
+
+.final{text-align:center;padding:8px 0;}
+.final .big{font-size:42px;font-weight:800;margin:6px 0;}
+.final .msg{font-size:14px;color:var(--soft);margin-bottom:16px;}
+.legend{display:flex;gap:16px;justify-content:center;font-size:13px;color:var(--soft);
+  flex-wrap:wrap;margin-top:10px;line-height:1.9;}
+.legend b{font-size:15px;}
+.legend .b b{color:var(--b);}
+.legend .p b{color:var(--p);}
+
+details.set{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;}
+details.set summary{cursor:pointer;font-size:13px;color:var(--soft);}
+details.set .body{padding-top:12px;font-size:13px;color:var(--soft);line-height:1.8;}
+.file-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+footer{text-align:center;font-size:12px;color:var(--soft);padding:18px;}
+@media(max-width:520px){
+  .choices,.judge-row{grid-template-columns:1fr;}
+  .judge-py{font-size:38px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>b · p 送气音与不送气音 · 小练习</h1>
+  <p>配套《发展汉语·初级综合（Ⅰ）》第 1 课《你好》语音练习 b[p] / p[p']</p>
+</header>
+
+<div class="wrap">
+
+  <div class="tipbar">
+    💡 记住：<b class="b">b 不送气</b>（纸巾不动）　　　<b class="p">p 送气</b>（纸巾飘起）　——　两个音嘴形一样，只差一口气
+  </div>
+
+  <div class="soundcard">
+    <div style="font-weight:700;margin-bottom:8px">🔇 手机没声音？三步排查</div>
+    <ol style="margin:0 0 12px;padding-left:20px;line-height:1.9">
+      <li><b>iPhone</b>：检查机身左侧的<b>静音开关</b>，拨到响铃一侧 —— 这是最常见的原因</li>
+      <li><b>在微信里打开</b>：点右上角「···」→「在浏览器打开」，微信内置浏览器常常发不出声</li>
+      <li><b>换音源</b>：在本页「教师设置」里把声音来源改成「内置合成」，它不依赖手机语音引擎</li>
+    </ol>
+    <button id="test-snd" class="primary" style="padding:8px 16px;font-size:14px">▶ 点我试听（pō 坡）</button>
+    <span class="srcbadge">当前音源：<b id="src-label">内置合成</b></span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="listen">① 听辨闯关（8 题）</button>
+    <button class="tab" data-tab="judge">② 判断题（6 题）</button>
+  </div>
+
+  <!-- ===== ① 听辨闯关 ===== -->
+  <section class="panel active" id="panel-listen">
+    <div class="card">
+      <h2>听辨闯关：你听到的是 A 还是 B？</h2>
+      <p class="hint">点播放听一个音节，判断是 A 还是 B。<b>答错了不跳题</b> —— 会自动连放 A、B 两个音，然后你在<b>原题上重新选一次</b>。</p>
+
+      <div class="prow">
+        <span id="l-prog">第 1 / 8 题</span>
+        <span class="chip" id="l-score">答对 0 题</span>
+      </div>
+
+      <div class="play">
+        <button class="play-btn" id="play">▶</button>
+        <span class="play-sub" id="play-sub">点击播放 · 可以重复听</span>
+      </div>
+
+      <div class="choices">
+        <button class="choice" id="cA" data-side="A">
+          <div class="tag">A</div><div class="py" id="pyA">—</div><div class="hz" id="hzA"></div>
+        </button>
+        <button class="choice" id="cB" data-side="B">
+          <div class="tag">B</div><div class="py" id="pyB">—</div><div class="hz" id="hzB"></div>
+        </button>
+      </div>
+
+      <div class="fb" id="l-fb"></div>
+
+      <div class="actions">
+        <button class="primary" id="l-next" disabled>下一题</button>
+        <button id="l-restart">重新开始</button>
+      </div>
+
+      <details class="set">
+        <summary>教师设置（音频来源 / 题目顺序）</summary>
+        <div class="body">
+          <div class="file-row" style="margin-bottom:10px">
+            <input type="file" id="files" multiple accept="audio/*">
+            <span>批量选音频，文件名用「拼音+声调数字」，如 <code>bao1.mp3</code>（包 bāo）、<code>bao3.mp3</code>（饱 bǎo）、<code>pa4.mp3</code>（怕 pà）。缺哪个音会自动回落到内置合成音。</span>
+          </div>
+          <div id="astatus" style="margin-bottom:10px"></div>
+          <div style="margin-bottom:10px">
+            <div style="margin-bottom:6px">声音来源：</div>
+            <label style="display:inline-flex;gap:6px;align-items:center;margin-right:14px;cursor:pointer">
+              <input type="radio" name="snd" value="synth"> 内置合成（推荐，任何手机都有声）
+            </label>
+            <label style="display:inline-flex;gap:6px;align-items:center;margin-right:14px;cursor:pointer">
+              <input type="radio" name="snd" value="auto"> 自动（有中文语音就用设备朗读）
+            </label>
+            <label style="display:inline-flex;gap:6px;align-items:center;cursor:pointer">
+              <input type="radio" name="snd" value="tts"> 设备朗读（更自然，但部分手机无声）
+            </label>
+          </div>
+          <label style="display:flex;gap:8px;align-items:center;cursor:pointer">
+            <input type="checkbox" id="shuffle"> 打乱 A / B 左右顺序（增加难度）
+          </label>
+          <p style="margin-top:10px">「内置合成」是按语音学参数现场合成的音节：b 与 p 的差别体现在<b>送气段长度</b>（b≈8毫秒，p≈95毫秒），正是本课要训练的那口气。上传了教师录音时优先使用录音。汉字仅为提示，不要求认字。</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="card" id="l-final" style="display:none">
+      <div class="final">
+        <div class="big" id="l-final-score">8 / 8</div>
+        <div class="msg" id="l-final-msg"></div>
+        <div class="actions" style="margin-top:0">
+          <button class="primary" id="l-again">全部再做一次</button>
+          <button id="l-wrong" style="display:none">只练错题</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ② 判断题 ===== -->
+  <section class="panel" id="panel-judge">
+    <div class="card">
+      <h2>判断题：这个音送气吗？</h2>
+      <p class="hint">看拼音判断它是送气音（p）还是不送气音（b）。可以点播放先听一听。<b>答错了不跳题</b>，可以在原题重新选。</p>
+
+      <div class="prow">
+        <span id="j-prog">第 1 / 6 题</span>
+        <span class="chip" id="j-score">答对 0 题</span>
+      </div>
+
+      <div class="judge-q">
+        <div class="judge-py" id="j-py">bà</div>
+        <div class="judge-hz" id="j-hz">爸</div>
+      </div>
+
+      <div class="play">
+        <button class="play-btn" id="j-play" style="width:70px;height:70px;font-size:26px">▶</button>
+        <span class="play-sub" id="j-sub">听一听</span>
+      </div>
+
+      <div class="judge-ask">这个音是<b>送气音</b>吗？</div>
+
+      <div class="judge-row">
+        <button class="jbtn yes" id="j-yes">
+          <div class="ico">✅</div><div class="txt">是 · 送气</div><div class="sub">p —— 纸巾飘起</div>
+        </button>
+        <button class="jbtn no" id="j-no">
+          <div class="ico">🚫</div><div class="txt">不是 · 不送气</div><div class="sub">b —— 纸巾不动</div>
+        </button>
+      </div>
+
+      <div class="fb" id="j-fb"></div>
+
+      <div class="actions">
+        <button class="primary" id="j-next" disabled>下一题</button>
+        <button id="j-restart">重新开始</button>
+      </div>
+    </div>
+
+    <div class="card" id="j-final" style="display:none">
+      <div class="final">
+        <div class="big" id="j-final-score">6 / 6</div>
+        <div class="msg" id="j-final-msg"></div>
+        <div class="actions" style="margin-top:0">
+          <button class="primary" id="j-again">全部再做一次</button>
+          <button id="j-wrong" style="display:none">只练错题</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>答案速查</h2>
+    <p class="hint">做完可对照。教材第 1 页原表：bo—po、bu—pu、bei—pei、bao—pao、ban—pan。</p>
+    <div class="legend">
+      <span class="b"><b>b</b> 不送气：八 bā · 爸 bà · 白 bái · 饱 bǎo · 不 bù · 杯 bēi · 搬 bān · 波 bō</span>
+      <span class="p"><b>p</b> 送气：怕 pà · 排 pái · 跑 pǎo · 铺 pù · 呸 pēi · 抛 pāo · 攀 pān · 坡 pō</span>
+    </div>
+  </div>
+</div>
+
+<footer>《发展汉语·初级综合（Ⅰ）》第 1 课《你好》 · 语音练习 b[p] / p[p']</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ---------- Tab ---------- */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $('panel-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------- 音源：① 教师上传 ② 设备朗读(TTS) ③ 内置合成 ---------- */
+const audioMap = new Map();
+let useUploaded = false;
+let soundMode = localStorage.getItem('bp_sound') || 'synth';   // 默认内置合成，最可靠
+const norm = s => s.toLowerCase()
+  .replace(/[āáǎà]/g,'a').replace(/[ēéěè]/g,'e').replace(/[īíǐì]/g,'i')
+  .replace(/[ōóǒò]/g,'o').replace(/[ūúǔù]/g,'u').replace(/[ǖǘǚǜü]/g,'v')
+  .replace(/[^a-z]/g,'');
+
+/* 拼音 → "拼音+声调数字"：bāo→bao1，bǎo→bao3（避免 bāo/bǎo 撞名） */
+const TONECH = {
+  'ā':['a',1],'á':['a',2],'ǎ':['a',3],'à':['a',4],
+  'ē':['e',1],'é':['e',2],'ě':['e',3],'è':['e',4],
+  'ī':['i',1],'í':['i',2],'ǐ':['i',3],'ì':['i',4],
+  'ō':['o',1],'ó':['o',2],'ǒ':['o',3],'ò':['o',4],
+  'ū':['u',1],'ú':['u',2],'ǔ':['u',3],'ù':['u',4]};
+function pyNumKey(py){
+  let s = '', t = 0;
+  for(const ch of py){
+    const m = TONECH[ch];
+    if(m){ s += m[0]; if(m[1]) t = m[1]; } else s += ch;
+  }
+  return (s + (t || '')).toLowerCase();
+}
+function findAudio(py){
+  return audioMap.get(pyNumKey(py)) || audioMap.get(norm(py)) || null;
+}
+
+$('files').addEventListener('change', e=>{
+  let n = 0;
+  Array.from(e.target.files).forEach(f=>{
+    const raw = f.name.replace(/\.[^.]+$/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const url = URL.createObjectURL(f);
+    if(raw){ audioMap.set(raw, url); n++; }
+    const nk = norm(f.name.replace(/\.[^.]+$/,''));
+    if(nk && !audioMap.has(nk)) audioMap.set(nk, url);   // 无调名兜底
+  });
+  useUploaded = n > 0;
+  $('astatus').textContent = n
+    ? `已载入 ${n} 个音频，优先使用教师录音。`
+    : '未能识别拼音，仍使用内置合成音。';
+});
+
+function zhVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  const vs = speechSynthesis.getVoices();
+  return vs.find(v=>/zh[-_]CN/i.test(v.lang)) || vs.find(v=>/^zh/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged = ()=> updateSrcLabel();
+
+/* ===== 内置合成：双唇塞音 + 元音共振峰 + 声调曲线 ===== */
+let actx = null;
+function ensureAudio(){
+  try{
+    if(!actx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      actx = new AC();
+    }
+    if(actx.state === 'suspended') actx.resume();
+    return actx;
+  }catch(e){ return null; }
+}
+/* 任何触摸/点击都解锁音频（iOS 要求） */
+['click','touchstart'].forEach(ev=>
+  document.addEventListener(ev, ()=> ensureAudio(), {passive:true}));
+
+const SR = 44100;
+const F = { a:[800,1200,2800], o:[430,780,2700], u:[330,760,2400],
+            e:[530,1800,2500], i:[290,2250,2900], n:[300,1500,2500] };
+const RHY = { o:[['o']], u:[['u']], a:[['a']],
+              ei:[['e'],['i']], ao:[['a'],['u']], ai:[['a'],['i']], an:[['a'],['n']] };
+const TONE = {
+  1: u => 1.06 - .04*u,
+  2: u => .92 + .36*Math.max(0, (u-.3)/.7),
+  3: u => u < .45 ? 1.0 - .18*(u/.45) : .82 + .22*((u-.45)/.55),
+  4: u => 1.32 - .54*Math.min(1, u/.85)
+};
+const BASE = 145;
+
+function formantFilter(x, fCurve){
+  const y = new Float32Array(x.length);
+  const bw = [70,95,130];
+  const st = [[0,0],[0,0],[0,0]];
+  let coef = null;
+  for(let i = 0; i < x.length; i++){
+    if(i % 128 === 0){
+      const f = fCurve(i/SR);
+      coef = [0,1,2].map(k=>{
+        const r = Math.exp(-Math.PI*bw[k]/SR), th = 2*Math.PI*f[k]/SR;
+        const B = 2*r*Math.cos(th), C = -r*r;
+        return [1-B-C, B, C];
+      });
+    }
+    let v = x[i];
+    for(let k = 0; k < 3; k++){
+      const A = coef[k][0], B = coef[k][1], C = coef[k][2];
+      const o = A*v + B*st[k][0] + C*st[k][1];
+      st[k][1] = st[k][0]; st[k][0] = o; v = o;
+    }
+    y[i] = v;
+  }
+  return y;
+}
+
+function synthBuf(ini, rhyme, tone){
+  const seq = RHY[rhyme] || [['a']];
+  const pre = .05, burst = .006;
+  const asp = (ini === 'p') ? .095 : .008;      // ← b/p 唯一差别：送气段长度
+  const V = .36;
+  const n = Math.round((pre+burst+asp+V)*SR);
+  const burstStart = Math.round(pre*SR);
+  const vowStart   = Math.round((pre+burst+asp)*SR);
+  const x = new Float32Array(n);
+  let seed = 987654321;
+  const rnd = ()=> (seed = (seed*1103515245 + 12345) & 0x7fffffff) / 0x7fffffff * 2 - 1;
+
+  for(let i = burstStart; i < vowStart; i++){          // 爆破 + 送气噪声
+    x[i] = (i < burstStart + burst*SR) ? rnd() : rnd()*.75;
+  }
+  let ph = 0;
+  const tf = TONE[tone] || TONE[1];
+  for(let i = vowStart; i < n; i++){                   // 元音：锯齿声源 + 声调
+    const u = (i-vowStart)/(n-vowStart);
+    ph += BASE*tf(u)/SR; if(ph >= 1) ph -= 1;
+    x[i] = 2*ph - 1;
+  }
+  const fCurve = t => {
+    const tt = t*SR;
+    if(tt < vowStart) return F[seq[0][0]];
+    const u = (tt-vowStart)/(n-vowStart);
+    if(seq.length === 1) return F[seq[0][0]];
+    const p = u*(seq.length-1);
+    const idx = Math.min(seq.length-2, Math.floor(p));
+    const fr = p - idx;
+    const A = F[seq[idx][0]], B = F[seq[idx+1][0]];
+    return [0,1,2].map(k=> A[k] + (B[k]-A[k])*fr);
+  };
+  const y = formantFilter(x, fCurve);
+
+  /* 平衡送气能量：让 p 的"那口气"清晰可闻（本课唯一的听辨线索） */
+  const aspBeg = Math.round((pre+burst)*SR);
+  let vS = 0, vN = 0, aS = 0, aN = 0;
+  for(let i = vowStart; i < n; i++){ vS += y[i]*y[i]; vN++; }
+  for(let i = aspBeg;   i < vowStart; i++){ aS += y[i]*y[i]; aN++; }
+  const vRms = Math.sqrt(vS/Math.max(1,vN)), aRms = Math.sqrt(aS/Math.max(1,aN));
+  if(aRms > 1e-6 && vRms > 1e-6){
+    const g = Math.min(4, .55*vRms/aRms);        // 送气 ≈ 元音能量的 55%
+    for(let i = aspBeg; i < vowStart; i++) y[i] *= g;
+  }
+
+  let mx = 0;
+  for(let i = 0; i < n; i++){
+    let g = 1;
+    if(i >= vowStart){
+      const u = (i-vowStart)/(n-vowStart);
+      g = Math.min(1, u/.03) * (1 - Math.pow(u,3)*.8);
+    }
+    if(i > n - .05*SR) g *= (n-i)/(.05*SR);
+    y[i] *= g;
+    const a = Math.abs(y[i]); if(a > mx) mx = a;
+  }
+  if(mx > 0) for(let i = 0; i < n; i++) y[i] = y[i]/mx*.85;
+
+  const ctx = ensureAudio();
+  const buf = ctx.createBuffer(1, n, SR);
+  if(buf.copyToChannel) buf.copyToChannel(y, 0); else buf.getChannelData(0).set(y);
+  return buf;
+}
+
+const SYLL = {
+  'bō':['b','o',1],  'pō':['p','o',1],  'bù':['b','u',4],  'pù':['p','u',4],
+  'bēi':['b','ei',1],'pēi':['p','ei',1],'bāo':['b','ao',1],'pāo':['p','ao',1],
+  'bān':['b','an',1],'pān':['p','an',1],'bà':['b','a',4],  'pà':['p','a',4],
+  'bǎo':['b','ao',3],'pǎo':['p','ao',3],'bái':['b','ai',2],'pái':['p','ai',2]
+};
+const synthCache = new Map();
+function playSynth(py, slow, cb){
+  const ctx = ensureAudio();
+  const spec = SYLL[py];
+  if(!ctx || !spec){ tts(py, slow, cb); return; }
+  try{
+    if(!synthCache.has(py)) synthCache.set(py, synthBuf(spec[0], spec[1], spec[2]));
+    const src = ctx.createBufferSource();
+    src.buffer = synthCache.get(py);
+    src.playbackRate.value = slow ? .6 : 1;
+    const g = ctx.createGain(); g.gain.value = 1.1;
+    src.connect(g); g.connect(ctx.destination);
+    src.onended = ()=> cb && cb();
+    src.start();
+    setTimeout(()=> cb && cb(), slow ? 1400 : 900);   // 兜底
+  }catch(e){ tts(py, slow, cb); }
+}
+
+function tts(text, slow, cb){
+  if(!('speechSynthesis' in window)){ cb && cb(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  const v = zhVoice(); if(v) u.voice = v;
+  u.lang = 'zh-CN'; u.rate = slow ? .4 : .65;
+  u.onend = ()=> cb && cb();
+  speechSynthesis.speak(u);
+  setTimeout(()=> cb && cb(), slow ? 1600 : 1200);
+}
+
+function playOne(py, hz, slow, cb){
+  const url = useUploaded ? findAudio(py) : null;
+  if(url){
+    const a = new Audio(url);
+    a.playbackRate = slow ? .6 : 1;
+    a.onended = ()=> cb && cb();
+    a.play().then(()=>{}).catch(()=> pickFallback(py, hz, slow, cb));
+    setTimeout(()=> cb && cb(), slow ? 1800 : 1300);
+    return;
+  }
+  pickFallback(py, hz, slow, cb);
+}
+function pickFallback(py, hz, slow, cb){
+  const useTts = (soundMode === 'tts') || (soundMode === 'auto' && !!zhVoice());
+  if(useTts) tts(hz || py, slow, cb); else playSynth(py, slow, cb);
+}
+function srcName(){
+  if(useUploaded) return '教师录音';
+  if(soundMode === 'tts') return '设备朗读';
+  if(soundMode === 'auto') return (zhVoice() ? '设备朗读' : '内置合成');
+  return '内置合成';
+}
+function updateSrcLabel(){
+  const el = $('src-label'); if(el) el.textContent = srcName();
+}
+document.querySelectorAll('input[name="snd"]').forEach(r=>{
+  r.checked = (r.value === soundMode);
+  r.addEventListener('change', ()=>{
+    if(r.checked){ soundMode = r.value; localStorage.setItem('bp_sound', r.value); updateSrcLabel(); }
+  });
+});
+let seqTimer = null;
+function playSeq(items, slow, done){
+  let i = 0, finished = false;
+  clearTimeout(seqTimer);
+  const step = ()=>{
+    if(i >= items.length){
+      if(!finished){ finished = true; done && done(); }
+      return;
+    }
+    const it = items[i++];
+    let called = false;
+    const once = ()=>{ if(called) return; called = true; seqTimer = setTimeout(step, 380); };
+    playOne(it.py, it.hz, slow, once);
+    seqTimer = setTimeout(once, slow ? 1700 : 1300);
+  };
+  step();
+}
+
+/* ---------- ① 听辨闯关 ---------- */
+const L_BANK = [
+  {a:{py:'bō', hz:'波'},  b:{py:'pō', hz:'坡'},  t:'A'},
+  {a:{py:'bù', hz:'不'},  b:{py:'pù', hz:'铺'},  t:'B'},
+  {a:{py:'bēi',hz:'杯'},  b:{py:'pēi',hz:'呸'},  t:'A'},
+  {a:{py:'bāo',hz:'包'},  b:{py:'pāo',hz:'抛'},  t:'B'},
+  {a:{py:'bān',hz:'搬'},  b:{py:'pān',hz:'攀'},  t:'A'},
+  {a:{py:'bà', hz:'爸'},  b:{py:'pà', hz:'怕'},  t:'B'},
+  {a:{py:'bǎo',hz:'饱'},  b:{py:'pǎo',hz:'跑'},  t:'A'},
+  {a:{py:'bái',hz:'白'},  b:{py:'pái',hz:'排'},  t:'B'}
+];
+let lBank = L_BANK.slice(), li = 0, lOk = 0, lFixed = 0, lWrong = [], lShuffle = false;
+let cur = null, lAttempts = 0;
+
+$('shuffle').addEventListener('change', e=>{ lShuffle = e.target.checked; });
+
+function loadL(){
+  lAttempts = 0;
+  const q = lBank[li];
+  let A = q.a, B = q.b, t = q.t;
+  if(lShuffle && Math.random() < .5){ A = q.b; B = q.a; t = (q.t === 'A') ? 'B' : 'A'; }
+  cur = {A, B, t, q};
+  const correct = (t === 'A') ? A : B;
+  cur.correct = correct;
+
+  $('l-prog').textContent = `第 ${li+1} / ${lBank.length} 题`;
+  $('pyA').textContent = A.py; $('hzA').textContent = A.hz;
+  $('pyB').textContent = B.py; $('hzB').textContent = B.hz;
+  $('cA').className = 'choice ' + (A.py[0] === 'b' ? 'is-b' : 'is-p');
+  $('cB').className = 'choice ' + (B.py[0] === 'b' ? 'is-b' : 'is-p');
+  $('cA').disabled = false; $('cB').disabled = false;
+  $('l-fb').className = 'fb'; $('l-fb').innerHTML = '';
+  $('l-next').disabled = true;
+  $('play-sub').textContent = '点击播放 · 可以重复听';
+}
+
+$('play').addEventListener('click', ()=>{
+  playOne(cur.correct.py, cur.correct.hz, false);
+  $('play-sub').textContent = '正在播放…… 可以再点一次';
+});
+
+function clearMarks(a, b){
+  $(a).classList.remove('correct','wrong');
+  $(b).classList.remove('correct','wrong');
+}
+function lScoreText(){
+  $('l-score').textContent = lFixed ? `答对 ${lOk} 题 · 订正 ${lFixed}` : `答对 ${lOk} 题`;
+}
+
+/* 答错后可在原题重选：不显示答案，只重放对比 */
+function answerL(side){
+  const first = (lAttempts === 0);
+  lAttempts++;
+  const ok = (side === cur.t);
+  const correct = cur.correct;
+  const fb = $('l-fb');
+  clearMarks('cA','cB');
+
+  if(ok){
+    if(first) lOk++;
+    else {
+      lFixed++;
+      const i = lWrong.indexOf(cur.q);
+      if(i >= 0) lWrong.splice(i, 1);       // 订正会了，移出错题本
+    }
+    const rule = correct.py[0] === 'b' ? 'b 不送气，纸巾不动' : 'p 送气，纸巾飘起';
+    fb.className = 'fb show ok';
+    fb.innerHTML =
+      `<b>${first ? '✅ 答对了！' : '✅ 订正正确！'}</b><br>` +
+      `正确答案就是 ${cur.t}：<b>${correct.py}</b>（${correct.hz}）。${rule}。` +
+      `<div class="btns">
+         <button id="fb-again">🔁 再听一遍</button>
+         <button id="fb-cmp">🔊 A→B 对比</button>
+       </div>`;
+    $('fb-again').onclick = ()=> playOne(correct.py, correct.hz, false);
+    $('fb-cmp').onclick   = ()=> playSeq([cur.A, cur.B], false);
+    $('cA').disabled = true; $('cB').disabled = true;
+    $(side === 'A' ? 'cA' : 'cB').classList.add('correct');
+    $('play-sub').textContent = first ? '答对了，进入下一题吧' : '订正完成，可以进下一题';
+  } else {
+    if(first) lWrong.push(cur.q);
+    fb.className = 'fb show bad';
+    fb.innerHTML =
+      `<b>❌ ${first ? '听出来了吗？' : '还是差一点'}</b><br>` +
+      `先不告诉你答案 —— 现在连放 A、B 两个音，注意听<b>哪个“有气”</b>（纸巾会飘起）。<br>` +
+      `听完在<b>原题上重新选一次</b>。` +
+      `<div class="btns">
+         <button id="fb-cmp">🔊 再听 A→B 对比</button>
+         <button id="fb-slow">🐢 慢速对比</button>
+         <button id="fb-ans">😥 看答案</button>
+       </div>`;
+    $('fb-cmp').onclick  = ()=> playSeq([cur.A, cur.B], false);
+    $('fb-slow').onclick = ()=> playSeq([cur.A, cur.B], true);
+    $('fb-ans').onclick  = ()=> revealL();
+    /* 关键：不锁定按钮，允许在原题重选 */
+    $('cA').disabled = false; $('cB').disabled = false;
+    $(side === 'A' ? 'cA' : 'cB').classList.add('wrong');
+    $('play-sub').textContent = '连放 A、B 两个音，注意听哪个有气……';
+    setTimeout(()=> playSeq([cur.A, cur.B], false, ()=>{
+      $('play-sub').textContent = '听完了 —— 在原题重新选一次';
+    }), 700);
+  }
+  lScoreText();
+  $('l-next').disabled = false;
+  const last = (li === lBank.length - 1);
+  $('l-next').textContent = ok ? (last ? '查看成绩' : '下一题')
+                               : (last ? '查看成绩（也可先重选）' : '下一题（也可先重选）');
+}
+
+function revealL(){
+  const correct = cur.correct;
+  const rule = correct.py[0] === 'b' ? 'b 不送气，纸巾不动' : 'p 送气，纸巾飘起';
+  const fb = $('l-fb');
+  fb.className = 'fb show bad';
+  fb.innerHTML =
+    `<b>答案是 ${cur.t}：<span style="font-size:17px">${correct.py}</span>（${correct.hz}）</b><br>${rule}。下次再试试先听对比。` +
+    `<div class="btns"><button id="fb-cmp2">🔊 再听 A→B 对比</button></div>`;
+  $('fb-cmp2').onclick = ()=> playSeq([cur.A, cur.B], false);
+  $('cA').disabled = true; $('cB').disabled = true;
+  clearMarks('cA','cB');
+  $(cur.t === 'A' ? 'cA' : 'cB').classList.add('correct');
+  $('play-sub').textContent = '已看答案，进入下一题吧';
+}
+$('cA').addEventListener('click', ()=> answerL('A'));
+$('cB').addEventListener('click', ()=> answerL('B'));
+
+$('l-next').addEventListener('click', ()=>{
+  li++;
+  if(li >= lBank.length){ showLFinal(); return; }
+  loadL();
+});
+function showLFinal(){
+  const total = lBank.length;
+  $('l-final').style.display = 'block';
+  $('l-final-score').textContent = `${lOk} / ${total}`;
+  $('l-final-msg').textContent =
+    (lOk === total ? '全对！你已经能靠气流分辨 b 和 p 了。'
+      : (lOk >= total - 2 ? '基本掌握，错的那几题再听一次对比就好。'
+      : '别急，多听几组 A→B 对比，感觉会慢慢出来。')) +
+    (lFixed ? `　（其中 ${lFixed} 题是重听后订正对的）` : '');
+  $('l-wrong').style.display = lWrong.length ? 'inline-block' : 'none';
+  $('l-wrong').textContent = `只练错题（${lWrong.length} 题）`;
+  $('l-final').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function restartL(onlyWrong){
+  lBank = (onlyWrong && lWrong.length) ? lWrong.slice() : L_BANK.slice();
+  li = 0; lOk = 0; lFixed = 0; lAttempts = 0; lWrong = [];
+  $('l-score').textContent = '答对 0 题';
+  $('l-final').style.display = 'none';
+  loadL();
+}
+$('l-restart').addEventListener('click', ()=> restartL(false));
+$('l-again').addEventListener('click', ()=> restartL(false));
+$('l-wrong').addEventListener('click', ()=> restartL(true));
+loadL();
+
+/* ---------- ② 判断题 ---------- */
+const J_BANK = [
+  {py:'bà', hz:'爸', asp:false},
+  {py:'pà', hz:'怕', asp:true},
+  {py:'bái',hz:'白', asp:false},
+  {py:'pǎo',hz:'跑', asp:true},
+  {py:'bù', hz:'不', asp:false},
+  {py:'pō', hz:'坡', asp:true}
+];
+let jBank = J_BANK.slice(), ji = 0, jOk = 0, jFixed = 0, jWrong = [], jAttempts = 0;
+
+function jScoreText(){
+  $('j-score').textContent = jFixed ? `答对 ${jOk} 题 · 订正 ${jFixed}` : `答对 ${jOk} 题`;
+}
+
+function loadJ(){
+  jAttempts = 0;
+  const q = jBank[ji];
+  window._j = q;
+  $('j-prog').textContent = `第 ${ji+1} / ${jBank.length} 题`;
+  $('j-py').textContent = q.py;
+  $('j-py').style.color = q.py[0] === 'b' ? 'var(--b)' : 'var(--p)';
+  $('j-hz').textContent = q.hz;
+  $('j-yes').disabled = false; $('j-no').disabled = false;
+  $('j-yes').className = 'jbtn yes'; $('j-no').className = 'jbtn no';
+  $('j-fb').className = 'fb'; $('j-fb').innerHTML = '';
+  $('j-next').disabled = true;
+  $('j-sub').textContent = '听一听';
+}
+$('j-play').addEventListener('click', ()=>{
+  const q = window._j;
+  playOne(q.py, q.hz, false);
+  $('j-sub').textContent = '正在播放……';
+});
+function answerJ(saidYes){
+  const first = (jAttempts === 0);
+  jAttempts++;
+  const q = window._j;
+  const ok = (saidYes === q.asp);
+  const fb = $('j-fb');
+  clearMarks('j-yes','j-no');
+
+  if(ok){
+    if(first) jOk++;
+    else {
+      jFixed++;
+      const i = jWrong.indexOf(q);
+      if(i >= 0) jWrong.splice(i, 1);
+    }
+    fb.className = 'fb show ok';
+    fb.innerHTML =
+      `<b>${first ? '✅ 对了！' : '✅ 订正正确！'}</b><br>` +
+      `<b>${q.py}</b>（${q.hz}）是<b>${q.asp ? '送气音 p' : '不送气音 b'}</b>。` +
+      (q.asp ? 'p 送气，纸巾会飘起来。' : 'b 不送气，纸巾不动。') +
+      `<div class="btns"><button id="jfb-play">🔁 再听一遍</button></div>`;
+    $('jfb-play').onclick = ()=> playOne(q.py, q.hz, false);
+    $('j-yes').disabled = true; $('j-no').disabled = true;
+    $(saidYes ? 'j-yes' : 'j-no').classList.add('correct');
+  } else {
+    if(first) jWrong.push(q);
+    fb.className = 'fb show bad';
+    fb.innerHTML =
+      `<b>❌ ${first ? '再想想' : '还是差一点'}</b><br>` +
+      `先不告诉你答案 —— 口诀只有一句：<b>拼音开头是 p，就要送气</b>（纸巾会飘起）。<br>` +
+      `再看一次上面的拼音，<b>在原题重新选一次</b>。` +
+      `<div class="btns">
+         <button id="jfb-play2">🔁 听一听这个音</button>
+         <button id="jfb-ans">😥 看答案</button>
+       </div>`;
+    $('jfb-play2').onclick = ()=> playOne(q.py, q.hz, false);
+    $('jfb-ans').onclick  = ()=> revealJ();
+    $('j-yes').disabled = false; $('j-no').disabled = false;
+    $(saidYes ? 'j-yes' : 'j-no').classList.add('wrong');
+  }
+  jScoreText();
+  $('j-next').disabled = false;
+  const jlast = (ji === jBank.length - 1);
+  $('j-next').textContent = ok ? (jlast ? '查看成绩' : '下一题')
+                               : (jlast ? '查看成绩（也可先重选）' : '下一题（也可先重选）');
+}
+
+function revealJ(){
+  const q = window._j;
+  const fb = $('j-fb');
+  fb.className = 'fb show bad';
+  fb.innerHTML =
+    `<b>答案：<span style="font-size:17px">${q.py}</span>（${q.hz}）是<b>${q.asp ? '送气音 p' : '不送气音 b'}</b></b><br>` +
+    (q.asp ? 'p 送气，纸巾会飘起来。' : 'b 不送气，纸巾不动。') +
+    `<div class="btns"><button id="jfb-play3">🔁 再听一遍</button></div>`;
+  $('jfb-play3').onclick = ()=> playOne(q.py, q.hz, false);
+  $('j-yes').disabled = true; $('j-no').disabled = true;
+  clearMarks('j-yes','j-no');
+  $(q.asp ? 'j-yes' : 'j-no').classList.add('correct');
+}
+$('j-yes').addEventListener('click', ()=> answerJ(true));
+$('j-no').addEventListener('click', ()=> answerJ(false));
+$('j-next').addEventListener('click', ()=>{
+  ji++;
+  if(ji >= jBank.length){ showJFinal(); return; }
+  loadJ();
+});
+function showJFinal(){
+  const total = jBank.length;
+  $('j-final').style.display = 'block';
+  $('j-final-score').textContent = `${jOk} / ${total}`;
+  $('j-final-msg').textContent =
+    (jOk === total ? '规则完全掌握了：拼音开头是 p，就要送气。' : '记住一个口诀就行：拼音开头是 p，就要送气。') +
+    (jFixed ? `　（其中 ${jFixed} 题是订正后答对的）` : '');
+  $('j-wrong').style.display = jWrong.length ? 'inline-block' : 'none';
+  $('j-wrong').textContent = `只练错题（${jWrong.length} 题）`;
+  $('j-final').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function restartJ(onlyWrong){
+  jBank = (onlyWrong && jWrong.length) ? jWrong.slice() : J_BANK.slice();
+  ji = 0; jOk = 0; jFixed = 0; jAttempts = 0; jWrong = [];
+  $('j-score').textContent = '答对 0 题';
+  $('j-final').style.display = 'none';
+  loadJ();
+}
+$('j-restart').addEventListener('click', ()=> restartJ(false));
+$('j-again').addEventListener('click', ()=> restartJ(false));
+$('j-wrong').addEventListener('click', ()=> restartJ(true));
+loadJ();
+
+/* ---------- 试听 & 音源标签 ---------- */
+$('test-snd').addEventListener('click', ()=>{
+  ensureAudio();
+  playOne('pō', '坡', false);
+  $('test-snd').textContent = '🔊 已播放，听到了吗？';
+  setTimeout(()=> $('test-snd').textContent = '▶ 点我试听（pō 坡）', 1800);
+});
+updateSrcLabel();
+setTimeout(updateSrcLabel, 600);   // 等语音列表异步就绪
+</script>
+</body>
+</html>
