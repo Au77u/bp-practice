@@ -32,7 +32,7 @@ header p{margin:0;font-size:13px;color:var(--soft);}
 
 .soundcard{
   margin:0 0 18px;padding:14px 18px;border-radius:12px;
-  background:#fffbeb;border:1px solid #fcd34d;font-size:13.5px;line-height:1.7;
+  background:#eff6ff;border:1px solid #bfdbfe;font-size:13.5px;line-height:1.7;
 }
 .soundcard ol{margin:0 0 12px;padding-left:20px;}
 .srcbadge{
@@ -143,14 +143,17 @@ footer{text-align:center;font-size:12px;color:var(--soft);padding:18px;}
   </div>
 
   <div class="soundcard">
-    <div style="font-weight:700;margin-bottom:8px">🔇 手机没声音？三步排查</div>
+    <div style="font-weight:700;margin-bottom:8px">🔊 声音（使用设备真人朗读）</div>
+    <div style="line-height:1.9;margin-bottom:12px">
+      本页默认用<b>手机／电脑自带的中文真人语音</b>朗读。如果听不到，按顺序检查：
+    </div>
     <ol style="margin:0 0 12px;padding-left:20px;line-height:1.9">
       <li><b>iPhone</b>：检查机身左侧的<b>静音开关</b>，拨到响铃一侧 —— 这是最常见的原因</li>
       <li><b>在微信里打开</b>：点右上角「···」→「在浏览器打开」，微信内置浏览器常常发不出声</li>
-      <li><b>换音源</b>：在本页「教师设置」里把声音来源改成「内置合成」，它不依赖手机语音引擎</li>
+      <li><b>还是没声</b>：到下方「⚙️ 教师设置」把声音来源改成「内置合成（电子音）」，它不依赖设备语音引擎</li>
     </ol>
     <button id="test-snd" class="primary" style="padding:8px 16px;font-size:14px">▶ 点我试听（pō 坡）</button>
-    <span class="srcbadge">当前音源：<b id="src-label">内置合成</b></span>
+    <span class="srcbadge">当前音源：<b id="src-label">设备朗读</b></span>
   </div>
 
   <div class="tabs">
@@ -195,25 +198,22 @@ footer{text-align:center;font-size:12px;color:var(--soft);padding:18px;}
         <div class="body">
           <div class="file-row" style="margin-bottom:10px">
             <input type="file" id="files" multiple accept="audio/*">
-            <span>批量选音频，文件名用「拼音+声调数字」，如 <code>bao1.mp3</code>（包 bāo）、<code>bao3.mp3</code>（饱 bǎo）、<code>pa4.mp3</code>（怕 pà）。缺哪个音会自动回落到内置合成音。</span>
+            <span>批量选音频（可选），文件名用「拼音+声调数字」，如 <code>bao1.mp3</code>（包 bāo）、<code>bao3.mp3</code>（饱 bǎo）、<code>pa4.mp3</code>（怕 pà）。没上传的会自动用设备朗读。</span>
           </div>
           <div id="astatus" style="margin-bottom:10px"></div>
           <div style="margin-bottom:10px">
             <div style="margin-bottom:6px">声音来源：</div>
             <label style="display:inline-flex;gap:6px;align-items:center;margin-right:14px;cursor:pointer">
-              <input type="radio" name="snd" value="synth"> 内置合成（推荐，任何手机都有声）
-            </label>
-            <label style="display:inline-flex;gap:6px;align-items:center;margin-right:14px;cursor:pointer">
-              <input type="radio" name="snd" value="auto"> 自动（有中文语音就用设备朗读）
+              <input type="radio" name="snd" value="auto"> 设备朗读（真人语音 · 推荐）
             </label>
             <label style="display:inline-flex;gap:6px;align-items:center;cursor:pointer">
-              <input type="radio" name="snd" value="tts"> 设备朗读（更自然，但部分手机无声）
+              <input type="radio" name="snd" value="synth"> 内置合成（电子音 · 备用）
             </label>
           </div>
           <label style="display:flex;gap:8px;align-items:center;cursor:pointer">
             <input type="checkbox" id="shuffle"> 打乱 A / B 左右顺序（增加难度）
           </label>
-          <p style="margin-top:10px">「内置合成」是按语音学参数现场合成的音节：b 与 p 的差别体现在<b>送气段长度</b>（b≈8毫秒，p≈95毫秒），正是本课要训练的那口气。上传了教师录音时优先使用录音。汉字仅为提示，不要求认字。</p>
+          <p style="margin-top:10px">默认「设备朗读」用的是手机／电脑自带的中文真人语音，最自然。若设备没有中文语音（或部分安卓微信），会自动改用「内置合成」兜底，不会没声音——合成音是按语音学参数现场生成的，b 与 p 的差别体现在<b>送气段长度</b>（b≈8毫秒，p≈95毫秒），正是本课要训练的那口气。上传了教师录音时优先使用录音。汉字仅为提示，不要求认字。</p>
         </div>
       </details>
     </div>
@@ -310,7 +310,8 @@ document.querySelectorAll('.tab').forEach(t=>{
 /* ---------- 音源：① 教师上传 ② 设备朗读(TTS) ③ 内置合成 ---------- */
 const audioMap = new Map();
 let useUploaded = false;
-let soundMode = localStorage.getItem('bp_sound') || 'synth';   // 默认内置合成，最可靠
+/* 默认回到最初版本：优先用设备真人朗读；只有设备确实没有中文语音时才用内置合成兜底 */
+let soundMode = localStorage.getItem('bp_sound_v3') || 'auto';
 const norm = s => s.toLowerCase()
   .replace(/[āáǎà]/g,'a').replace(/[ēéěè]/g,'e').replace(/[īíǐì]/g,'i')
   .replace(/[ōóǒò]/g,'o').replace(/[ūúǔù]/g,'u').replace(/[ǖǘǚǜü]/g,'v')
@@ -504,7 +505,8 @@ function playSynth(py, slow, cb){
 function tts(text, slow, cb){
   if(!('speechSynthesis' in window)){ cb && cb(); return; }
   const u = new SpeechSynthesisUtterance(text);
-  const v = zhVoice(); if(v) u.voice = v;
+  const v = zhVoice();
+  if(v){ try{ u.voice = v; }catch(e){} }   // 个别浏览器赋值会抛错，忽略即可，lang 仍生效
   u.lang = 'zh-CN'; u.rate = slow ? .4 : .65;
   u.onend = ()=> cb && cb();
   speechSynthesis.speak(u);
@@ -539,7 +541,7 @@ function updateSrcLabel(){
 document.querySelectorAll('input[name="snd"]').forEach(r=>{
   r.checked = (r.value === soundMode);
   r.addEventListener('change', ()=>{
-    if(r.checked){ soundMode = r.value; localStorage.setItem('bp_sound', r.value); updateSrcLabel(); }
+    if(r.checked){ soundMode = r.value; localStorage.setItem('bp_sound_v3', r.value); updateSrcLabel(); }
   });
 });
 let seqTimer = null;
